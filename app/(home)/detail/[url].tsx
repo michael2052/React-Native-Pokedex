@@ -68,10 +68,10 @@ const Detail = () => {
               }}
             />
             <View style={styles.typeViewContainer}>
-              {detail.types.map((typeObj) => (
-                <View key={typeObj.type.url} style={styles.typeView}>
+              {detail.types.map((pokemon) => (
+                <View key={pokemon.type.url} style={styles.typeView}>
                   <Text style={{ padding: 5, textTransform: "capitalize" }}>
-                    {typeObj.type.name}
+                    {pokemon.type.name}
                   </Text>
                 </View>
               ))}

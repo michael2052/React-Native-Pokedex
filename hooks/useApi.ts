@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState, useEffect } from "react";
 
 const pokeApi = axios.create({
   baseURL: "https://pokeapi.co/api/v2/",

@@ -5,6 +5,7 @@ import { RootState } from ".";
 // Define the actions
 const addAction = "favorite/add";
 const removeAction = "favorite/remove";
+const resetAction = "favorite/reset";
 
 type FavoriteCountState = {
   favoriteCount: number;
@@ -25,6 +26,9 @@ export const favoriteCountSlice = createSlice({
       })
       .addCase(removeAction, (state, _action) => {
         state.favoriteCount -= 1;
+      })
+      .addCase(resetAction, (state, _action) => {
+        state.favoriteCount = 0;
       });
   },
 });

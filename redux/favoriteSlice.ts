@@ -22,8 +22,11 @@ export const favoriteSlice = createSlice({
         (pokemon) => pokemon.url !== action.payload.url
       );
     },
+    reset: (state) => {
+      state.favorites = [];
+    },
   },
 });
 
-export const { add, remove } = favoriteSlice.actions;
+export const { add, remove, reset } = favoriteSlice.actions;
 export const selectFavorites = (state: RootState) => state.Favorite.favorites;
