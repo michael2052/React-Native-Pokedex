@@ -1,37 +1,66 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { persistor, store } from "@/redux";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Tabs } from "expo-router";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import React from "react";
+import { ActivityIndicator, View } from "react-native";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// Initialize the QueryClient outside of the component
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <PersistGate
+          persistor={persistor}
+          loading={
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ActivityIndicator size="large" />
+            </View>
+          }
+        >
+          <Tabs
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Tabs.Screen name="index" options={{ href: null }} />
+            <Tabs.Screen
+              name="(home)"
+              options={{
+                title: "Home",
+                tabBarIcon: ({ color, focused }) => (
+                  <TabBarIcon
+                    name={focused ? "home" : "home-outline"}
+                    color={color}
+                  />
+                ),
+              }}
+            />
+            <Tabs.Screen
+              name="(favorite)"
+              options={{
+                title: "Favorite",
+                tabBarIcon: ({ color, focused }) => (
+                  <TabBarIcon
+                    name={focused ? "heart" : "heart-outline"}
+                    color={color}
+                  />
+                ),
+              }}
+            />
+          </Tabs>
+        </PersistGate>
+      </Provider>
+    </QueryClientProvider>
   );
 }
